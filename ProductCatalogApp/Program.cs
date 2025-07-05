@@ -1,4 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ProductCatalogApp.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<ProductContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ProductContext") ?? throw new InvalidOperationException("Connection string 'ProductContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
