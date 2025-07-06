@@ -10,6 +10,7 @@ using ProductCatalogApp.Models;
 
 namespace ProductCatalogApp.Controllers
 {
+
     public class ProductsController : Controller
     {
         private readonly ProductContext _context;
@@ -19,10 +20,20 @@ namespace ProductCatalogApp.Controllers
             _context = context;
         }
 
-        // GET: Products
-        public async Task<IActionResult> Index()
+        // GET: Products    
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Product.ToListAsync());
+            // 製品リストをすべて取得
+            var products = from p in _context.Product select p;
+
+            // searchString が空でなければ、検索語でフィルタ
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString) || p.Category.Contains(searchString));
+            }
+
+            // フィルタ後の結果を View に渡す（非同期実行）
+            return View(await products.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -46,6 +57,7 @@ namespace ProductCatalogApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            ViewBag.CategoryList = GetCategoryList();
             return View();
         }
 
@@ -78,6 +90,7 @@ namespace ProductCatalogApp.Controllers
             {
                 return NotFound();
             }
+            ViewBag.CategoryList = GetCategoryList();
             return View(product);
         }
 
@@ -152,6 +165,18 @@ namespace ProductCatalogApp.Controllers
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.Id == id);
+        }
+
+        private List<string> GetCategoryList()
+        {
+            return new List<string>
+            {
+                "電子機器",
+                "家具",
+                "衣料",
+                "書籍",
+                "食品"
+            };
         }
     }
 }
