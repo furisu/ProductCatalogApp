@@ -66,7 +66,7 @@ namespace ProductCatalogApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Category,Price,Description")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Category,Price,Description,ImageUrl")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -74,6 +74,9 @@ namespace ProductCatalogApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.CategoryList = GetCategoryList();
+
             return View(product);
         }
 
@@ -99,7 +102,7 @@ namespace ProductCatalogApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Category,Price,Description")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Category,Price,Description,ImageUrl")] Product product)
         {
             if (id != product.Id)
             {
@@ -126,6 +129,8 @@ namespace ProductCatalogApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.CategoryList = GetCategoryList();
+
             return View(product);
         }
 
