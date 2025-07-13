@@ -17,7 +17,7 @@ namespace ProductCatalogApp.Models
 
         public string Description { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
