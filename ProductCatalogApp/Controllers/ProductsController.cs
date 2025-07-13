@@ -70,10 +70,13 @@ namespace ProductCatalogApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                product.CreatedAt = DateTime.Now;
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
 
             ViewBag.CategoryList = GetCategoryList();
 
@@ -113,6 +116,14 @@ namespace ProductCatalogApp.Controllers
             {
                 try
                 {
+                    var existingProduct = await _context.Product.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+                    if (existingProduct == null)
+                    {
+                        return NotFound();
+                    }
+
+                    product.CreatedAt = existingProduct.CreatedAt;
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
