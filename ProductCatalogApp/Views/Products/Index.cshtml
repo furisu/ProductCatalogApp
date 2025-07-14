@@ -71,3 +71,40 @@
 }
     </tbody>
 </table>
+
+<nav aria-label="ページネーション">
+    <ul class="pagination justify-content-center">
+        @if (ViewBag.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice">前へ</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@i"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice">@i</a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice">次へ</a>
+            </li>
+        }
+    </ul>
+</nav>

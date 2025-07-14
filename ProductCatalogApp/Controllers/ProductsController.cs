@@ -21,17 +21,20 @@ namespace ProductCatalogApp.Controllers
         }
 
         // GET: Products    
-        public async Task<IActionResult> Index(string searchString, decimal? minPrice, decimal? maxPrice)
+        public async Task<IActionResult> Index(string searchString, decimal? minPrice, decimal? maxPrice, int page = 1)
         {
-            // 製品リストをすべて取得
+            int pageSize = 5; // 1ページに表示する件数
+
+            // クエリの準備
             var products = from p in _context.Product select p;
 
-            // searchString が空でなければ、検索語でフィルタ
+            // 製品名・カテゴリでの検索
             if (!string.IsNullOrEmpty(searchString))
             {
                 products = products.Where(p => p.Name.Contains(searchString) || p.Category.Contains(searchString));
             }
 
+            // 価格でのフィルター
             if (minPrice.HasValue)
             {
                 products = products.Where(p => p.Price >= minPrice.Value);
@@ -42,10 +45,24 @@ namespace ProductCatalogApp.Controllers
                 products = products.Where(p => p.Price <= maxPrice.Value);
             }
 
+            // ページネーション用の件数・データ取得
+            int totalItems = await products.CountAsync();
+            var items = await products
+                .OrderBy(p => p.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            // フィルタ後の結果を View に渡す（非同期実行）
-            return View(await products.ToListAsync());
+            // ビューに渡す情報
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.SearchString = searchString;
+            ViewBag.MinPrice = minPrice;
+            ViewBag.MaxPrice = maxPrice;
+
+            return View(items);
         }
+
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)

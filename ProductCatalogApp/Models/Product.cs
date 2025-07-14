@@ -18,7 +18,7 @@ namespace ProductCatalogApp.Models
         public decimal Price { get; set; }
 
         [StringLength(500, ErrorMessage = "説明は500文字以内で入力してください")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Url(ErrorMessage = "正しいURL形式で入力してください")]
         public string? ImageUrl { get; set; }
