@@ -21,7 +21,7 @@ namespace ProductCatalogApp.Controllers
         }
 
         // GET: Products    
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, decimal? minPrice, decimal? maxPrice)
         {
             // 製品リストをすべて取得
             var products = from p in _context.Product select p;
@@ -31,6 +31,17 @@ namespace ProductCatalogApp.Controllers
             {
                 products = products.Where(p => p.Name.Contains(searchString) || p.Category.Contains(searchString));
             }
+
+            if (minPrice.HasValue)
+            {
+                products = products.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => p.Price <= maxPrice.Value);
+            }
+
 
             // フィルタ後の結果を View に渡す（非同期実行）
             return View(await products.ToListAsync());
