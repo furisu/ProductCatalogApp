@@ -38,12 +38,15 @@
                     <span>▼</span> <!-- 降順マーク -->
                 }
                 </a>
-            </th>
+            </th>   
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
                 登録日
+            </th>
+            <th>
+                更新日時
             </th>
             <th></th>
         </tr>
@@ -66,6 +69,10 @@
             <td>
                 @item.CreatedAt.ToString("yyyy/MM/dd HH:mm")
             </td>
+            <td>
+                @item.UpdatedAt?.ToString("yyyy/MM/dd HH:mm")
+            </td>
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

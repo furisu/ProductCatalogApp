@@ -64,7 +64,6 @@ namespace ProductCatalogApp.Controllers
             // ページネーション
             int totalItems = await products.CountAsync();
             var items = await products
-                .OrderBy(p => p.Id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -167,6 +166,10 @@ namespace ProductCatalogApp.Controllers
                     }
 
                     product.CreatedAt = existingProduct.CreatedAt;
+
+                    // 更新日時を現在時刻に設定
+                    product.UpdatedAt = DateTime.Now;
+
 
                     _context.Update(product);
                     await _context.SaveChangesAsync();
