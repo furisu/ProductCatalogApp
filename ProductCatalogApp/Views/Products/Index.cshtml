@@ -27,7 +27,17 @@
                 @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortParam" asp-route-searchString="@ViewBag.SearchString" asp-route-minPrice="@ViewBag.MinPrice" asp-route-maxPrice="@ViewBag.MaxPrice">
+                価格
+                @if (ViewBag.CurrentSort == "price_asc")
+                {
+                    <span>▲</span> <!-- 昇順マーク -->
+                }
+                else if (ViewBag.CurrentSort == "price_desc")
+                {
+                    <span>▼</span> <!-- 降順マーク -->
+                }
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
@@ -81,7 +91,8 @@
                    asp-route-page="@(ViewBag.CurrentPage - 1)"
                    asp-route-searchString="@ViewBag.SearchString"
                    asp-route-minPrice="@ViewBag.MinPrice"
-                   asp-route-maxPrice="@ViewBag.MaxPrice">前へ</a>
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-sortOrder="@ViewBag.CurrentSort">前へ</a>
             </li>
         }
 
@@ -92,7 +103,8 @@
                    asp-route-page="@i"
                    asp-route-searchString="@ViewBag.SearchString"
                    asp-route-minPrice="@ViewBag.MinPrice"
-                   asp-route-maxPrice="@ViewBag.MaxPrice">@i</a>
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-sortOrder="@ViewBag.CurrentSort">@i</a>
             </li>
         }
 
@@ -103,7 +115,8 @@
                    asp-route-page="@(ViewBag.CurrentPage + 1)"
                    asp-route-searchString="@ViewBag.SearchString"
                    asp-route-minPrice="@ViewBag.MinPrice"
-                   asp-route-maxPrice="@ViewBag.MaxPrice">次へ</a>
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-sortOrder="@ViewBag.CurrentSort">次へ</a>
             </li>
         }
     </ul>

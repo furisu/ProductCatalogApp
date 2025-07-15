@@ -21,7 +21,12 @@ namespace ProductCatalogApp.Controllers
         }
 
         // GET: Products    
-        public async Task<IActionResult> Index(string searchString, decimal? minPrice, decimal? maxPrice, int page = 1)
+        public async Task<IActionResult> Index(
+    string searchString,
+    decimal? minPrice,
+    decimal? maxPrice,
+    int page = 1,
+    string sortOrder = "")
         {
             int pageSize = 5; // 1ページに表示する件数
 
@@ -45,7 +50,18 @@ namespace ProductCatalogApp.Controllers
                 products = products.Where(p => p.Price <= maxPrice.Value);
             }
 
-            // ページネーション用の件数・データ取得
+            // ソート設定
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.PriceSortParam = sortOrder == "price_asc" ? "price_desc" : "price_asc";
+
+            products = sortOrder switch
+            {
+                "price_desc" => products.OrderByDescending(p => (double)p.Price),
+                "price_asc" => products.OrderBy(p => (double)p.Price),
+                _ => products.OrderBy(p => p.Id) // デフォルト：登録順
+            };
+
+            // ページネーション
             int totalItems = await products.CountAsync();
             var items = await products
                 .OrderBy(p => p.Id)
