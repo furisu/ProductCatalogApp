@@ -122,6 +122,12 @@ namespace ProductCatalogApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            var product = new Product
+            {
+                Price = 0,
+                Stock = 0
+            };
+
             ViewBag.CategoryList = GetCategoryList();
             ViewBag.StatusList = GetStatusList();
 
