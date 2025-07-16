@@ -29,6 +29,11 @@ namespace ProductCatalogApp.Models
         [DataType(DataType.DateTime)]
         public DateTime? UpdatedAt { get; set; }
 
+        [Range(0, 9999, ErrorMessage = "在庫数は0〜9999の範囲で入力してください")]
+        public int Stock { get; set; }
+
+        [Required(ErrorMessage = "ステータスは必須です")]
+        public string Status { get; set; }
 
     }
 }

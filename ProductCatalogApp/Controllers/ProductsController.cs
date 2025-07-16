@@ -21,12 +21,14 @@ namespace ProductCatalogApp.Controllers
         }
 
         // GET: Products    
-        public async Task<IActionResult> Index(
-    string searchString,
-    decimal? minPrice,
-    decimal? maxPrice,
-    int page = 1,
-    string sortOrder = "")
+        public async Task<IActionResult> Index
+            (
+                string searchString,
+                decimal? minPrice,
+                decimal? maxPrice,
+                int page = 1,
+                string sortOrder = ""
+            )
         {
             int pageSize = 5; // 1ページに表示する件数
 
@@ -101,6 +103,8 @@ namespace ProductCatalogApp.Controllers
         public IActionResult Create()
         {
             ViewBag.CategoryList = GetCategoryList();
+            ViewBag.StatusList = GetStatusList();
+
             return View();
         }
 
@@ -109,7 +113,7 @@ namespace ProductCatalogApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Category,Price,Description,ImageUrl")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Category,Price,Description,ImageUrl,Stock,Status")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -122,6 +126,8 @@ namespace ProductCatalogApp.Controllers
 
 
             ViewBag.CategoryList = GetCategoryList();
+            ViewBag.StatusList = GetStatusList();
+
 
             return View(product);
         }
@@ -140,6 +146,8 @@ namespace ProductCatalogApp.Controllers
                 return NotFound();
             }
             ViewBag.CategoryList = GetCategoryList();
+            ViewBag.StatusList = GetStatusList();
+
             return View(product);
         }
 
@@ -148,7 +156,7 @@ namespace ProductCatalogApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Category,Price,Description,ImageUrl")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Category,Price,Description,ImageUrl,Stock,Status")] Product product)
         {
             if (id != product.Id)
             {
@@ -188,6 +196,8 @@ namespace ProductCatalogApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.CategoryList = GetCategoryList();
+            ViewBag.StatusList = GetStatusList();
+
 
             return View(product);
         }
@@ -241,5 +251,16 @@ namespace ProductCatalogApp.Controllers
                 "食品"
             };
         }
+
+        private List<string> GetStatusList()
+        {
+            return new List<string>
+            {
+                "在庫あり",
+                "在庫切れ",
+                "販売終了"
+            };
+        }
+
     }
 }
