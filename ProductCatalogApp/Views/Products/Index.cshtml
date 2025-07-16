@@ -11,9 +11,30 @@
 </p>
 
 <form asp-controller="Products" asp-action="Index" method="get" class="form-inline mb-3">
-    <input type="text" name="searchString" class="form-control mr-2" placeholder="製品名やカテゴリで検索" />
-    <input type="number" name="minPrice" class="form-control mr-2" placeholder="最低価格" step="100" />
-    <input type="number" name="maxPrice" class="form-control mr-2" placeholder="最高価格" step="100" />
+    <input type="text" name="searchString" class="form-control mr-2" placeholder="製品名で検索" value="@ViewBag.SearchString" />
+    <input type="number" name="minPrice" class="form-control mr-2" placeholder="最低価格" step="100" value="@ViewBag.MinPrice" />
+    <input type="number" name="maxPrice" class="form-control mr-2" placeholder="最高価格" step="100" value="@ViewBag.MaxPrice" />
+
+    <select name="selectedCategory" class="form-control mr-2">
+        <option value="">すべてのカテゴリ</option>
+        @foreach (var category in ViewBag.CategoryList as List<string>)
+        {
+            <option value="@category" selected="@(category == ViewBag.SelectedCategory ? "selected" : null)">
+                @category
+            </option>
+        }
+    </select>
+
+    <select name="selectedStatus" class="form-control mr-2">
+        <option value="">すべてのステータス</option>
+        @foreach (var status in ViewBag.StatusList as List<string>)
+        {
+            <option value="@status" selected="@(status == ViewBag.SelectedStatus ? "selected" : null)">
+                @status
+            </option>
+        }
+    </select>
+
     <button type="submit" class="btn btn-primary">検索</button>
 </form>
 
@@ -27,16 +48,22 @@
                 @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortParam" asp-route-searchString="@ViewBag.SearchString" asp-route-minPrice="@ViewBag.MinPrice" asp-route-maxPrice="@ViewBag.MaxPrice">
-                価格
-                @if (ViewBag.CurrentSort == "price_asc")
-                {
-                    <span>▲</span> <!-- 昇順マーク -->
-                }
-                else if (ViewBag.CurrentSort == "price_desc")
-                {
-                    <span>▼</span> <!-- 降順マーク -->
-                }
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.PriceSortParam"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">
+                    価格
+                    @if (ViewBag.CurrentSort == "price_asc")
+                    {
+                        <span>▲</span>
+                    }
+                    else if (ViewBag.CurrentSort == "price_desc")
+                    {
+                        <span>▼</span>
+                    }
                 </a>
             </th>   
             <th>
@@ -111,7 +138,9 @@
                    asp-route-searchString="@ViewBag.SearchString"
                    asp-route-minPrice="@ViewBag.MinPrice"
                    asp-route-maxPrice="@ViewBag.MaxPrice"
-                   asp-route-sortOrder="@ViewBag.CurrentSort">前へ</a>
+                   asp-route-sortOrder="@ViewBag.CurrentSort"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">前へ</a>
             </li>
         }
 
@@ -123,7 +152,9 @@
                    asp-route-searchString="@ViewBag.SearchString"
                    asp-route-minPrice="@ViewBag.MinPrice"
                    asp-route-maxPrice="@ViewBag.MaxPrice"
-                   asp-route-sortOrder="@ViewBag.CurrentSort">@i</a>
+                   asp-route-sortOrder="@ViewBag.CurrentSort"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">@i</a>
             </li>
         }
 
@@ -135,7 +166,9 @@
                    asp-route-searchString="@ViewBag.SearchString"
                    asp-route-minPrice="@ViewBag.MinPrice"
                    asp-route-maxPrice="@ViewBag.MaxPrice"
-                   asp-route-sortOrder="@ViewBag.CurrentSort">次へ</a>
+                   asp-route-sortOrder="@ViewBag.CurrentSort"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">次へ</a>
             </li>
         }
     </ul>

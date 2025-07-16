@@ -26,22 +26,25 @@ namespace ProductCatalogApp.Controllers
                 string searchString,
                 decimal? minPrice,
                 decimal? maxPrice,
+                string selectedCategory,
+                string selectedStatus,
                 int page = 1,
                 string sortOrder = ""
             )
         {
-            int pageSize = 5; // 1ページに表示する件数
+            // 1ページに表示する件数
+            int pageSize = 5;
 
             // クエリの準備
             var products = from p in _context.Product select p;
 
-            // 製品名・カテゴリでの検索
+            // 製品名検索
             if (!string.IsNullOrEmpty(searchString))
             {
-                products = products.Where(p => p.Name.Contains(searchString) || p.Category.Contains(searchString));
+                products = products.Where(p => p.Name.Contains(searchString));
             }
 
-            // 価格でのフィルター
+            // 価格フィルター
             if (minPrice.HasValue)
             {
                 products = products.Where(p => p.Price >= minPrice.Value);
@@ -51,6 +54,19 @@ namespace ProductCatalogApp.Controllers
             {
                 products = products.Where(p => p.Price <= maxPrice.Value);
             }
+
+            // カテゴリ絞り込み
+            if (!string.IsNullOrEmpty(selectedCategory))
+            {
+                products = products.Where(p => p.Category == selectedCategory);
+            }
+
+            // ステータス絞り込み
+            if (!string.IsNullOrEmpty(selectedStatus))
+            {
+                products = products.Where(p => p.Status == selectedStatus);
+            }
+
 
             // ソート設定
             ViewBag.CurrentSort = sortOrder;
@@ -76,6 +92,10 @@ namespace ProductCatalogApp.Controllers
             ViewBag.SearchString = searchString;
             ViewBag.MinPrice = minPrice;
             ViewBag.MaxPrice = maxPrice;
+            ViewBag.SelectedCategory = selectedCategory;
+            ViewBag.SelectedStatus = selectedStatus;
+            ViewBag.CategoryList = GetCategoryList();
+            ViewBag.StatusList = GetStatusList();
 
             return View(items);
         }
