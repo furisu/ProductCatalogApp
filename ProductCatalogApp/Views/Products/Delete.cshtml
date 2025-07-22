@@ -1,45 +1,64 @@
 ﻿@model ProductCatalogApp.Models.Product
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "削除確認";
 }
 
-<h1>Delete</h1>
+<h1>削除確認</h1>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<h3 class="text-danger">本当にこの製品を削除しますか？</h3>
+<p class="text-muted">この操作は元に戻せません。</p>
+
+<div class="row">
+    <div class="col-md-8">
+        <h4>製品情報</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">製品名</dt>
+            <dd class="col-sm-10">@Model.Name</dd>
+
+            <dt class="col-sm-2">カテゴリ</dt>
+            <dd class="col-sm-10">@Model.Category?.Name ?? "(未設定)"</dd>
+
+            <dt class="col-sm-2">価格</dt>
+            <dd class="col-sm-10">@Model.Price</dd>
+
+            <dt class="col-sm-2">在庫</dt>
+            <dd class="col-sm-10">@Model.Stock</dd>
+
+            <dt class="col-sm-2">ステータス</dt>
+            <dd class="col-sm-10">@Model.Status?.Name ?? "(未設定)"</dd>
+
+            <dt class="col-sm-2">説明</dt>
+            <dd class="col-sm-10">@Model.Description</dd>
+
+            <dt class="col-sm-2">登録日</dt>
+            <dd class="col-sm-10">@Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")</dd>
+
+            <dt class="col-sm-2">更新日</dt>
+            <dd class="col-sm-10">
+                @(Model.UpdatedAt?.ToString("yyyy/MM/dd HH:mm") ?? "（未更新）")
+            </dd>
+
+            <dt class="col-sm-2">画像</dt>
+            <dd class="col-sm-10">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" alt="製品画像" style="width:150px;" />
+                }
+                else
+                {
+                    <span>（画像なし）</span>
+                }
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group mt-3">
+                <input type="submit" value="削除する" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-secondary ml-2">一覧に戻る</a>
+            </div>
+        </form>
+    </div>
 </div>

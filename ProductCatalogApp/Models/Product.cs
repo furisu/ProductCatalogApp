@@ -11,7 +11,8 @@ namespace ProductCatalogApp.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "カテゴリは必須です")]
-        public string Category { get; set; }
+        public int CategoryId { get; set; }  // 外部キー
+        public Category Category { get; set; }  // ナビゲーションプロパティ
 
         [Required(ErrorMessage = "価格は必須です")]
         [Range(0, 100000, ErrorMessage = "価格は0円〜100,000円の範囲で入力してください")]
@@ -23,18 +24,19 @@ namespace ProductCatalogApp.Models
         [Url(ErrorMessage = "正しいURL形式で入力してください")]
         public string? ImageUrl { get; set; }
 
+        [Range(0, 9999, ErrorMessage = "在庫数は0〜9999の範囲で入力してください")]
+        public int Stock { get; set; }
+
+        [Required(ErrorMessage = "ステータスは必須です")]
+        public int StatusId { get; set; }  // 外部キー
+        public Status Status { get; set; }  // ナビゲーションプロパティ
+
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime? UpdatedAt { get; set; }
-
-        [Range(0, 9999, ErrorMessage = "在庫数は0〜9999の範囲で入力してください")]
-        public int Stock { get; set; }
-
-        [Required(ErrorMessage = "ステータスは必須です")]
-        public string Status { get; set; }
-
     }
 }
+
 
