@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProductCatalogApp.Models
 {
@@ -12,11 +13,12 @@ namespace ProductCatalogApp.Models
 
         [Required(ErrorMessage = "カテゴリは必須です")]
         public int CategoryId { get; set; }  // 外部キー
+        [ValidateNever]
         public Category Category { get; set; }  // ナビゲーションプロパティ
 
         [Required(ErrorMessage = "価格は必須です")]
         [Range(0, 100000, ErrorMessage = "価格は0円〜100,000円の範囲で入力してください")]
-        public decimal Price { get; set; }
+        public int Price { get; set; }
 
         [StringLength(500, ErrorMessage = "説明は500文字以内で入力してください")]
         public string? Description { get; set; }
@@ -27,8 +29,9 @@ namespace ProductCatalogApp.Models
         [Range(0, 9999, ErrorMessage = "在庫数は0〜9999の範囲で入力してください")]
         public int Stock { get; set; }
 
-        [Required(ErrorMessage = "ステータスは必須です")]
+        [Required(ErrorMessage = "販売状況は必須です")]
         public int StatusId { get; set; }  // 外部キー
+        [ValidateNever]
         public Status Status { get; set; }  // ナビゲーションプロパティ
 
         [DataType(DataType.DateTime)]

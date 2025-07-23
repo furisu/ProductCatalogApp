@@ -41,6 +41,11 @@ namespace ProductCatalogApp.Controllers
                 .Include(p => p.Status)
                 .AsQueryable();
 
+            ViewBag.CategoryList = _context.Category.Select(c => c.Name).ToList();
+            ViewBag.StatusList = _context.Status.Select(s => s.Name).ToList();
+
+
+
             // 製品名検索
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -97,7 +102,8 @@ namespace ProductCatalogApp.Controllers
             ViewBag.MaxPrice = maxPrice;
             ViewBag.SelectedCategory = selectedCategory;
             ViewBag.SelectedStatus = selectedStatus;
-            SetSelectLists();
+            SetSelectLists(selectedCategory, selectedStatus);
+
 
             return View(items);
         }
@@ -145,6 +151,19 @@ namespace ProductCatalogApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Price,Description,ImageUrl,Stock,StatusId")] Product product)
         {
+            // バリデーション失敗時のエラー内容を出力
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("ModelState is invalid");
+                foreach (var kv in ModelState)
+                {
+                    foreach (var error in kv.Value.Errors)
+                    {
+                        Console.WriteLine($"Error in {kv.Key}: {error.ErrorMessage}");
+                    }
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 product.CreatedAt = DateTime.Now;
@@ -175,6 +194,7 @@ namespace ProductCatalogApp.Controllers
                 return NotFound();
             }
             SetSelectLists();
+
 
             return View(product);
         }
@@ -238,6 +258,8 @@ namespace ProductCatalogApp.Controllers
             }
 
             var product = await _context.Product
+                .Include(p => p.Category)
+                .Include(p => p.Status)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -267,10 +289,15 @@ namespace ProductCatalogApp.Controllers
             return _context.Product.Any(e => e.Id == id);
         }
 
+        private void SetSelectLists(int? selectedCategory, int? selectedStatus)
+        {
+            ViewBag.CategoryList = new SelectList(_context.Category.ToList(), "Id", "Name", selectedCategory);
+            ViewBag.StatusList = new SelectList(_context.Status.ToList(), "Id", "Name", selectedStatus);
+        }
+
         private void SetSelectLists()
         {
-            ViewBag.CategoryList = new SelectList(_context.Category.ToList(), "Id", "Name");
-            ViewBag.StatusList = new SelectList(_context.Status.ToList(), "Id", "Name");
+            SetSelectLists(null, null);
         }
     }
 }
