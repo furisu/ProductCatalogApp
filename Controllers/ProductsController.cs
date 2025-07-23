@@ -166,7 +166,7 @@ namespace ProductCatalogApp.Controllers
 
             if (ModelState.IsValid)
             {
-                product.CreatedAt = DateTime.Now;
+                product.CreatedAt = DateTime.UtcNow;
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
@@ -224,7 +224,7 @@ namespace ProductCatalogApp.Controllers
                     product.CreatedAt = existingProduct.CreatedAt;
 
                     // 更新日時を現在時刻に設定
-                    product.UpdatedAt = DateTime.Now;
+                    product.UpdatedAt = DateTime.UtcNow;
 
 
                     _context.Update(product);
