@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProductCatalogApp.Models;
+using Npgsql;
 
 namespace ProductCatalogApp.Data
 {
@@ -17,9 +18,6 @@ namespace ProductCatalogApp.Data
         public DbSet<Product> Product { get; set; } = default!;
         public DbSet<Category> Category { get; set; } = default!;
         public DbSet<Status> Status { get; set; } = default!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=productcatalog.db");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
