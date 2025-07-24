@@ -11,11 +11,29 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres"))
 {
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':');
+    // 自前でパース
+    // 例: postgres://username:password@hostname:port/dbname
+    var connectionData = databaseUrl.Replace("postgres://", "");
+    var atIndex = connectionData.IndexOf('@');
+    var credentials = connectionData.Substring(0, atIndex);
+    var hostAndDb = connectionData.Substring(atIndex + 1);
+
+    var userParts = credentials.Split(':');
+    var user = userParts[0];
+    var password = userParts[1];
+
+    var hostParts = hostAndDb.Split('/');
+    var hostPort = hostParts[0];
+    var database = hostParts[1];
+
+    var hostPortParts = hostPort.Split(':');
+    var host = hostPortParts[0];
+    var port = hostPortParts.Length > 1 ? hostPortParts[1] : "5432";
+
     connectionString =
-        $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+        $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=true";
 }
+
 
 // DbContextの登録（PostgreSQL）
 builder.Services.AddDbContext<ProductContext>(options =>
