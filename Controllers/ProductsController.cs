@@ -94,6 +94,16 @@ namespace ProductCatalogApp.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
+
+            foreach (var p in items)
+            {
+                p.CreatedAt = ConvertToJst(p.CreatedAt);
+                if (p.UpdatedAt.HasValue)
+                {
+                    p.UpdatedAt = ConvertToJst(p.UpdatedAt.Value);
+                }
+            }
+
             // ビューに渡す情報
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -126,6 +136,13 @@ namespace ProductCatalogApp.Controllers
             {
                 return NotFound();
             }
+
+            product.CreatedAt = ConvertToJst(product.CreatedAt);
+            if (product.UpdatedAt.HasValue)
+            {
+                product.UpdatedAt = ConvertToJst(product.UpdatedAt.Value);
+            }
+
 
             return View(product);
         }
@@ -299,5 +316,15 @@ namespace ProductCatalogApp.Controllers
         {
             SetSelectLists(null, null);
         }
+
+        private static DateTime ConvertToJst(DateTime utcDateTime)
+        {
+            var jst = TimeZoneInfo.FindSystemTimeZoneById(
+                System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows)
+                    ? "Tokyo Standard Time" : "Asia/Tokyo"
+            );
+            return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, jst);
+        }
+
     }
 }
