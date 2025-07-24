@@ -1,0 +1,137 @@
+﻿@model IEnumerable<ProductCatalogApp.Models.Product>
+
+@{
+    ViewData["Title"] = "製品一覧";
+}
+
+<h1>製品一覧</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">新規作成</a>
+</p>
+
+<form asp-controller="Products" asp-action="Index" method="get" class="form-inline mb-3">
+    <input type="text" name="searchString" class="form-control mr-2" placeholder="製品名で検索" value="@ViewBag.SearchString" />
+    <input type="number" name="minPrice" class="form-control mr-2" placeholder="最低価格" step="100" value="@ViewBag.MinPrice" />
+    <input type="number" name="maxPrice" class="form-control mr-2" placeholder="最高価格" step="100" value="@ViewBag.MaxPrice" />
+
+    <select name="selectedCategory" class="form-control mr-2"
+            asp-items="ViewBag.CategoryList">
+        <option value="">すべてのカテゴリ</option>
+    </select>
+
+
+    <select name="selectedStatus" class="form-control mr-2"
+            asp-items="ViewBag.StatusList">
+        <option value="">すべてのステータス</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary">検索</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>商品名</th>
+            <th>カテゴリ</th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.PriceSortParam"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">
+                    価格
+                    @if (ViewBag.CurrentSort == "price_asc")
+                    {
+                        <span>▲</span>
+                    }
+                    else if (ViewBag.CurrentSort == "price_desc")
+                    {
+                        <span>▼</span>
+                    }
+                </a>
+            </th>
+            <th>在庫数</th>
+            <th>販売状況</th>
+            <th>商品説明</th>
+            <th>登録日</th>
+            <th>更新日時</th>
+            <th>操作</th>
+            <th>画像</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@item.Category.Name</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.Stock)</td>
+                <td>@item.Status.Name</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@item.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
+                <td>@item.UpdatedAt?.ToString("yyyy/MM/dd HH:mm")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">編集</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">詳細</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">削除</a>
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="製品画像" style="width:100px;" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="ページネーション">
+    <ul class="pagination justify-content-center">
+        @if (ViewBag.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-sortOrder="@ViewBag.CurrentSort"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">前へ</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@i"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-sortOrder="@ViewBag.CurrentSort"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">@i</a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-sortOrder="@ViewBag.CurrentSort"
+                   asp-route-selectedCategory="@ViewBag.SelectedCategory"
+                   asp-route-selectedStatus="@ViewBag.SelectedStatus">次へ</a>
+            </li>
+        }
+    </ul>
+</nav>

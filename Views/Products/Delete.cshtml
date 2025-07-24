@@ -1,0 +1,64 @@
+﻿@model ProductCatalogApp.Models.Product
+
+@{
+    ViewData["Title"] = "削除確認";
+}
+
+<h1>削除確認</h1>
+
+<h3 class="text-danger">本当にこの製品を削除しますか？</h3>
+<p class="text-muted">この操作は元に戻せません。</p>
+
+<div class="row">
+    <div class="col-md-8">
+        <h4>製品情報</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">商品名</dt>
+            <dd class="col-sm-10">@Model.Name</dd>
+
+            <dt class="col-sm-2">カテゴリ</dt>
+            <dd class="col-sm-10">@Model.Category?.Name</dd>
+
+            <dt class="col-sm-2">価格</dt>
+            <dd class="col-sm-10">@Model.Price</dd>
+
+            <dt class="col-sm-2">在庫</dt>
+            <dd class="col-sm-10">@Model.Stock</dd>
+
+            <dt class="col-sm-2">販売状況</dt>
+            <dd class="col-sm-10">@Model.Status?.Name</dd>
+
+            <dt class="col-sm-2">商品説明</dt>
+            <dd class="col-sm-10">@Model.Description</dd>
+
+            <dt class="col-sm-2">登録日</dt>
+            <dd class="col-sm-10">@Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")</dd>
+
+            <dt class="col-sm-2">更新日</dt>
+            <dd class="col-sm-10">
+                @(Model.UpdatedAt?.ToString("yyyy/MM/dd HH:mm") ?? "（未更新）")
+            </dd>
+
+            <dt class="col-sm-2">画像</dt>
+            <dd class="col-sm-10">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" alt="製品画像" style="width:150px;" />
+                }
+                else
+                {
+                    <span>（画像なし）</span>
+                }
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group mt-3">
+                <input type="submit" value="削除する" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-secondary ml-2">一覧に戻る</a>
+            </div>
+        </form>
+    </div>
+</div>
