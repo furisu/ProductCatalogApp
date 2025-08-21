@@ -9,12 +9,12 @@ namespace ProductCatalogApp.Models
 
         [Required(ErrorMessage = "製品名は必須です")]
         [StringLength(100, ErrorMessage = "製品名は100文字以内で入力してください")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "カテゴリは必須です")]
         public int CategoryId { get; set; }  // 外部キー
         [ValidateNever]
-        public Category Category { get; set; }  // ナビゲーションプロパティ
+        public Category Category { get; set; } = null!;// ナビゲーションプロパティ
 
         [Required(ErrorMessage = "価格は必須です")]
         [Range(0, 100000, ErrorMessage = "価格は0円〜100,000円の範囲で入力してください")]
@@ -32,7 +32,7 @@ namespace ProductCatalogApp.Models
         [Required(ErrorMessage = "販売状況は必須です")]
         public int StatusId { get; set; }  // 外部キー
         [ValidateNever]
-        public Status Status { get; set; }  // ナビゲーションプロパティ
+        public Status Status { get; set; } = null!;  // ナビゲーションプロパティ
 
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
