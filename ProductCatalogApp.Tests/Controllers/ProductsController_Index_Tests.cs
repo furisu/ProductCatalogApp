@@ -23,7 +23,7 @@ public class ProductsController_Index_Tests : IDisposable
         var sut = new ProductsController(_ctx);
 
         var result = await sut.Index(
-            searchString: null,
+            searchString: "",
             minPrice: null,
             maxPrice: null,
             selectedCategory: 1,

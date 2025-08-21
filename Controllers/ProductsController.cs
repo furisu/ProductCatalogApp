@@ -23,13 +23,13 @@ namespace ProductCatalogApp.Controllers
         // GET: Products    
         public async Task<IActionResult> Index
             (
-                string searchString,
+                string? searchString,
                 decimal? minPrice,
                 decimal? maxPrice,
                 int? selectedCategory,
                 int? selectedStatus,
                 int page = 1,
-                string sortOrder = ""
+                string? sortOrder = null
             )
         {
             // 1ページに表示する件数
@@ -77,8 +77,9 @@ namespace ProductCatalogApp.Controllers
 
 
             // ソート設定
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.PriceSortParam = sortOrder == "price_asc" ? "price_desc" : "price_asc";
+            ViewBag.CurrentSort = sortOrder ?? "";
+            ViewBag.PriceSortParam = (sortOrder == "price_asc") ? "price_desc" : "price_asc";
+
 
             products = sortOrder switch
             {
