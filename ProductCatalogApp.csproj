@@ -19,6 +19,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <Compile Remove="ProductCatalogApp.Tests\**\*.cs" />
+    <EmbeddedResource Remove="ProductCatalogApp.Tests\**\*" />
+    <None Remove="ProductCatalogApp.Tests\**\*" />
+    <Content Remove="ProductCatalogApp.Tests\**\*" />
   </ItemGroup>
 
 </Project>
